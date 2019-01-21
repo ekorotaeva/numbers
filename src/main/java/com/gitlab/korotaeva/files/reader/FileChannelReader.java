@@ -1,6 +1,5 @@
 package com.gitlab.korotaeva.files.reader;
 
-import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 import java.io.IOException;
@@ -12,11 +11,13 @@ import java.util.Arrays;
 import java.util.List;
 
 @Slf4j
-@AllArgsConstructor
 public class FileChannelReader {
 
-    private static final long BLOCK_SIZE = 2024 * 1024 * 1024; // 1Gb
+    private static final long BLOCK_SIZE = 2 * 1024 * 1024 * 1024L; // 2Gb
     private static final List<Character> separators = Arrays.asList('\r', '\n', ' ', ','); //
+
+    private FileChannelReader() {
+    }
 
     public static void read(Path path, byte[] searchable) {
 
@@ -25,12 +26,11 @@ public class FileChannelReader {
             log.info(String.format("size of %s: %d bytes", path, length));
 
             int pos = 0;
-            long trymap = BLOCK_SIZE + searchable.length;
 
             while (pos < length) {
-                int mapSize = (int) Math.min(trymap, length - pos);
+                int mapSize = (int) Math.min(BLOCK_SIZE + searchable.length, length - pos);
                 // different limits depending on whether we are the last mapped segment.
-                long limit = trymap == mapSize ? BLOCK_SIZE : (mapSize - searchable.length + 1);
+                long limit = (mapSize - searchable.length + 1);
 
                 MappedByteBuffer buffer = channel.map(FileChannel.MapMode.READ_ONLY, pos, mapSize);
                 log.info(String.format("Searching in block %d-%d", pos, pos + mapSize));
@@ -47,7 +47,7 @@ public class FileChannelReader {
 //                        log.debug(String.format("Position %d. Skipped symbol : %s", i, symbol));
 //                    }
                 }
-                pos += (trymap == mapSize) ? BLOCK_SIZE : mapSize;
+                pos += mapSize;
             }
         } catch (IOException e) {
             log.error(String.format("File reading error: %s", e.toString()));

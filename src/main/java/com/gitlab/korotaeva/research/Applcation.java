@@ -17,7 +17,7 @@ public class Applcation {
 
         Path path = Paths.get("./tmp/1.txt");
 
-        String string = "-7272671331620470461";
+        String string = "9095147463233753086";
 
         byte[] asByteArray = string.getBytes(CHARSET);
         log.info(String.format("Searching %s (size: %d bytes)", new String(asByteArray, CHARSET), asByteArray.length));
