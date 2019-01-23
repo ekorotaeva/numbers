@@ -1,4 +1,4 @@
-package com.gitlab.korotaeva.number.generator;
+package io.github.ekorotaeva.numbers.generator;
 
 import java.util.List;
 

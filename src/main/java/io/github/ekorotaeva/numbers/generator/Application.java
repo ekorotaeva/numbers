@@ -1,8 +1,8 @@
-package com.gitlab.korotaeva.number.generator;
+package io.github.ekorotaeva.numbers.generator;
 
 
-import com.gitlab.korotaeva.files.reader.FileChannelReader;
-import com.gitlab.korotaeva.files.writer.BufferedFileWriter;
+import io.github.ekorotaeva.files.reader.FileChannelReader;
+import io.github.ekorotaeva.files.writer.BufferedFileWriter;
 import lombok.extern.slf4j.Slf4j;
 
 import java.nio.charset.Charset;
@@ -17,10 +17,10 @@ import java.util.concurrent.atomic.AtomicLong;
 @Slf4j(topic = "Application")
 public class Application {
 
-    private static final long SIZE = 65_0_000_000L;
-    private static final long LEFT = -9_222_999_999_999_999_999L;
-    private static final long RIGHT = 9_222_999_999_999_999_999L;
-    private static final String FILENAME = "./tmp/1.txt";
+    private static final int SIZE = 65_000_000;
+    private static final long MAX_VALUE = 9_222_999_999_999_999_999L;
+    private static final long MIN_VALUE = -9_222_999_999_999_999_999L;
+    private static final String FILENAME = "./1.txt";
     private static final Charset CHARSET = StandardCharsets.UTF_8;
 
     public static void main(String[] args) {
@@ -29,7 +29,7 @@ public class Application {
 
         /* Generation */
 
-        Generator<Long> generator = new RandomGenerator(SIZE, LEFT, RIGHT);
+        Generator<Long> generator = new LongRandomGenerator(SIZE, MIN_VALUE, MAX_VALUE);
         AtomicLong startTime = new AtomicLong(System.currentTimeMillis());
         List<Long> values = generator.generate();
 
@@ -40,7 +40,7 @@ public class Application {
 
         try {
             startTime.set(System.currentTimeMillis());
-            new BufferedFileWriter().writeLongs(FILENAME, values);
+            BufferedFileWriter.write(FILENAME, values, '\n');
 
         } catch (Exception e) {
             log.error(String.format("Write File error %s", e.getLocalizedMessage()));

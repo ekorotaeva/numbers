@@ -1,4 +1,4 @@
-package com.gitlab.korotaeva.files.reader;
+package io.github.ekorotaeva.files.reader;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -19,7 +19,7 @@ public class FileChannelReader {
     private FileChannelReader() {
     }
 
-    public static void read(Path path, byte[] searchable) {
+    public static boolean read(Path path, byte[] searchable) {
 
         try (FileChannel channel = FileChannel.open(path, StandardOpenOption.READ)) {
             final long length = channel.size();
@@ -41,7 +41,7 @@ public class FileChannelReader {
                     // check the first symbol of searchable data and match the content
                     if (symbol == searchable[0] && tryMatch(buffer, i, searchable)) {
                         log.info(String.format("Founded searchable at position: %d", i));
-                        return;
+                        return true;
                     }
 //                    else {
 //                        log.debug(String.format("Position %d. Skipped symbol : %s", i, symbol));
@@ -52,6 +52,7 @@ public class FileChannelReader {
         } catch (IOException e) {
             log.error(String.format("File reading error: %s", e.toString()));
         }
+        return false;
     }
 
     private static boolean tryMatch(MappedByteBuffer buffer, int pos, byte[] searchable) {

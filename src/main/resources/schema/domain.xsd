@@ -1,0 +1,37 @@
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
+           xmlns="http://search.numbers.ekorotaeva.github.io/domain"
+           targetNamespace="http://search.numbers.ekorotaeva.github.io/domain"
+           >
+
+    <!--elementFormDefault="qualified"-->
+
+    <xs:element name="FindNumberRequest">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="number" type="xs:string"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:element name="FindNumberResponse">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="Result" type="Result"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:complexType name="Result">
+        <xs:sequence>
+            <xs:element name="code" type="xs:string"/>
+            <xs:element name="number" type="xs:int"/>
+            <xs:element name="fileNames" type="list"/>
+            <xs:element name="error" type="xs:string"/>
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:simpleType name="list">
+        <xs:list itemType="xs:string"/>
+    </xs:simpleType>
+
+</xs:schema>
